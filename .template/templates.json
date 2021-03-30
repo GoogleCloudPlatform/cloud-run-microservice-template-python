@@ -1,0 +1,17 @@
+{
+  "name": "cloud-run-microservice-template-python",
+  "metadata": {
+    "version": "0.1.0"
+  },
+  "templates": [
+    {
+      "path": "./",
+      "name": "Cloud Run Microservice Template - Python",
+      "description": "Basic microservice template for Cloud Run",
+      "languages": [
+        "Python",
+        "Dockerfile"
+      ]
+    }
+  ]
+}
