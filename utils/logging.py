@@ -15,10 +15,9 @@
 from typing import Dict
 
 from flask import request
-
 import structlog
 
-from utils.metadata import get_project_id
+from utils import metadata
 
 
 def field_name_modifier(
@@ -52,7 +51,7 @@ def trace_modifier(
         # Only append the trace if it exists in the request
         if trace_header:
             trace = trace_header.split("/")
-            project = get_project_id()
+            project = metadata.get_project_id()
             event_dict[
                 "logging.googleapis.com/trace"
             ] = f"projects/{project}/traces/{trace[0]}"

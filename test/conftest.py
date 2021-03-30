@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from app import app as flask_app
-
 import flask
 from flask.testing import FlaskClient
-
 import pytest
+
+from app import app as flask_app
 
 
 @pytest.fixture

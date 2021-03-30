@@ -21,9 +21,9 @@
 
 import os
 import sys
+from typing import List
 
 from invoke import task
-
 
 venv = "source ./venv/bin/activate"
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
@@ -81,10 +81,29 @@ def dev(c):  # noqa: ANN001, ANN201
 def lint(c):  # noqa: ANN001, ANN201
     """Run linting checks"""
     with c.prefix(venv):
+        local_names = _determine_local_import_names(".")
         c.run(
-            "flake8 --exclude venv --max-line-length=88 "
-            "--import-order-style=google --ignore=E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I202"
+            "flake8 --exclude venv "
+            "--max-line-length=88 "
+            "--import-order-style=google "
+            f"--application-import-names {','.join(local_names)} "
+            "--ignore=E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I202"
         )
+
+
+def _determine_local_import_names(start_dir: str) -> List[str]:
+    """Determines all import names that should be considered "local".
+    This is used when running the linter to insure that import order is
+    properly checked.
+    """
+    file_ext_pairs = [os.path.splitext(path) for path in os.listdir(start_dir)]
+    return [
+        basename
+        for basename, extension in file_ext_pairs
+        if extension == ".py"
+        or os.path.isdir(os.path.join(start_dir, basename))
+        and basename not in ("__pycache__")
+    ]
 
 
 @task(pre=[require_venv])
@@ -92,6 +111,7 @@ def fix(c):  # noqa: ANN001, ANN201
     """Apply linting fixes"""
     with c.prefix(venv):
         c.run("black *.py **/*.py --force-exclude venv")
+        c.run("isort --profile google *.py **/*.py")
 
 
 @task(pre=[require_project])
