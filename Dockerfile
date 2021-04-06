@@ -13,8 +13,6 @@
 # https://hub.docker.com/_/python
 FROM python:3.9-slim
 
-
-ENV PORT 8080
 # Allow statements and log messages to immediately appear in the Cloud Run logs
 ENV PYTHONUNBUFFERED 1
 
