@@ -15,6 +15,7 @@ FROM python:3.9-slim
 
 
 ENV PORT 8080
+# Allow statements and log messages to immediately appear in the Cloud Run logs
 ENV PYTHONUNBUFFERED 1
 
 # Create and change to the app directory.
