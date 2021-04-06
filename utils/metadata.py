@@ -38,10 +38,12 @@ def get_service_region() -> str:
 
 def authenticated_request(url: str, method: str) -> str:
     """Make a request with an ID token to a protected service
-    https://cloud.google.com/iap/docs/authentication-howto#iap_make_request-python"""
-    client_id = flask_request.host
-    open_id_connect_token = id_token.fetch_id_token(Request(), client_id)
+    https://cloud.google.com/functions/docs/securing/authenticating#functions-bearer-token-example-python"""
+
+    auth_req = google.auth.transport.requests.Request()
+    id_token = google.oauth2.id_token.fetch_id_token(auth_req, url)
+
     resp = requests.request(
-        method, url, headers={"Authorization": f"Bearer {open_id_connect_token}"}
+        method, url, headers={"Authorization": f"Bearer {id_token}"}
     )
     return resp.content
