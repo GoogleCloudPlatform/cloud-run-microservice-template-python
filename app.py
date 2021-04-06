@@ -25,22 +25,22 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello() -> str:
-    # Use basic logger without HTTP request info
+    # Use basic logging with custom fields
     logger.info(logField="custom-entry", arbitraryField="custom-entry")
 
-    logger.info(
-        "Child logger with trace Id."
-    )  # https://cloud.google.com/run/docs/logging#correlate-logs
+    # https://cloud.google.com/run/docs/logging#correlate-logs
+    logger.info("Child logger with trace Id.")
+
     return "Hello, World!"
 
 
-def shutdown_handler(signal: int, frame: FrameType) -> None:
-    # def shutdown_handler(signal: int, frame) -> None:
-    logger.info(f"Caught Signal {'SIGINT' if signal == 2 else 'SIGTERM'}")
+def shutdown_handler(signal_int: int, frame: FrameType) -> None:
+    logger.info(f"Caught Signal {signal.strsignal(signal_int)}")
     from utils.logging import flush
 
     flush()
     sys.exit(0)
+
 
 
 if __name__ == "__main__":
