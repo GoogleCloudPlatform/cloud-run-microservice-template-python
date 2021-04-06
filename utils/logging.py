@@ -25,8 +25,9 @@ def field_name_modifier(
 ) -> Dict:
     """Changes the keys for some of the fields,
     to match Cloud Logging's expectations
+    https://cloud.google.com/run/docs/logging#special-fields
     """
-    # adapted from
+    # structlog example adapted from
     # https://github.com/ymotongpoo/cloud-logging-configurations/blob/master/python/structlog/main.py
 
     event_dict["severity"] = event_dict["level"]

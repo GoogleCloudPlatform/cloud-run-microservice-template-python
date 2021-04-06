@@ -36,11 +36,13 @@ def hello() -> str:
 
 def shutdown_handler(signal_int: int, frame: FrameType) -> None:
     logger.info(f"Caught Signal {signal.strsignal(signal_int)}")
+
     from utils.logging import flush
 
     flush()
-    sys.exit(0)
 
+    # Safely exit program
+    sys.exit(0)
 
 
 if __name__ == "__main__":
