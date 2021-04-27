@@ -42,6 +42,14 @@ Learn how to use Cloud Code for:
 
 ### CLI tooling
 
+To run the `invoke` commands below, install [`invoke`](https://www.pyinvoke.org/index.html) system wide: 
+
+```bash
+pip install invoke
+```
+
+Invoke will handle establishing local virtual environments, etc. Task definitions can be found in `tasks.py`.
+
 #### Local development
 
 1. Set Project Id:

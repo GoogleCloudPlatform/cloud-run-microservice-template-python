@@ -60,6 +60,7 @@ def trace_modifier(
 
 
 def getJSONLogger() -> structlog._config.BoundLoggerLazyProxy:
+    """Create a JSON logger using the field name and trace modifiers created above"""
     # extend using https://www.structlog.org/en/stable/processors.html
     structlog.configure(
         processors=[
