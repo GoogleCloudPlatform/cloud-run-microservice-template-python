@@ -48,11 +48,10 @@ def shutdown_handler(signal_int: int, frame: FrameType) -> None:
 if __name__ == "__main__":
     # Running application locally, outside of a Google Cloud Environment
 
-    # handle Ctrl-C Termination
+    # handles Ctrl-C termination
     signal.signal(signal.SIGINT, shutdown_handler)
 
     app.run(host="localhost", port=8080, debug=True)
 else:
     # handles Cloud Run container termination
-
     signal.signal(signal.SIGTERM, shutdown_handler)
