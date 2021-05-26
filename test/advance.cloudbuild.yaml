@@ -37,7 +37,7 @@ steps:
     entrypoint: pack
     args:
       - build
-      - "$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA" # Tag docker image with git commit SHA
+      - "$_GAR_HOSTNAME/$_SERVICE_NAME:$COMMIT_SHA" # Tag docker image with git commit SHA
       - "--builder=gcr.io/buildpacks/builder:v1"
       - "--path=."
 
@@ -45,17 +45,19 @@ steps:
     name: "gcr.io/cloud-builders/docker:latest"
     args:
       - push
-      - "$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
+      - "$_GAR_HOSTNAME/$_SERVICE_NAME:$COMMIT_SHA"
 
   - id: "Deploy to Cloud Run"
     name: "gcr.io/cloud-builders/gcloud:latest"
     entrypoint: /bin/bash
     args:
       - "-c"
+
+      # Generate a random 15 character alphanumeric string (lowercase only)
       - |
-        cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id # Generate a random 15 character alphanumeric string (lowercase only)
+        cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id 
         gcloud run deploy ${_SERVICE_NAME}-$(cat _short_id) \
-          --image $_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA \
+          --image $_GAR_HOSTNAME/$_SERVICE_NAME:$COMMIT_SHA \
           --region ${_DEPLOY_REGION} \
           --platform ${_PLATFORM} \
           --no-allow-unauthenticated
@@ -92,11 +94,16 @@ steps:
     args:
       - "-c"
       - |
-        gcloud container images delete $_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA --quiet
-        gcloud run services delete ${_SERVICE_NAME}-$(cat _short_id) --region ${_DEPLOY_REGION} --platform ${_PLATFORM} --quiet
+        gcloud artifacts docker images delete $_GAR_HOSTNAME/$_SERVICE_NAME:$COMMIT_SHA --quiet
+        gcloud run services delete ${_SERVICE_NAME}-$(cat _short_id) \
+          --region ${_DEPLOY_REGION} --platform ${_PLATFORM} --quiet
+
+options:
+  dynamic_substitutions: true
+  substitution_option: "ALLOW_LOOSE"
 
 substitutions:
-  _GCR_HOSTNAME: us.gcr.io
+  _GAR_HOSTNAME: us-central1-docker.pkg.dev/${PROJECT_ID}/repo
   _SERVICE_NAME: microservice-template
   _DEPLOY_REGION: us-central1
   _PLATFORM: managed

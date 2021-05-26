@@ -103,12 +103,19 @@ Invoke will handle establishing local virtual environments, etc. Task definition
     access to the test service. Therefore, service accounts need to have the permission to issue ID tokens for request authorization:
     * Enable Cloud Run, Cloud Build and IAM APIs:
         ```bash
-        gcloud services enable run.googleapis.com cloudbuild.googleapis.com iamcredentials.googleapis.com
+        gcloud services enable run.googleapis.com cloudbuild.googleapis.com iamcredentials.googleapis.com artifactregistry.googleapis.com
         ```
     * Set environment variables.
         ```bash
         export PROJECT_ID="$(gcloud config get-value project)"
         export PROJECT_NUMBER="$(gcloud projects describe $(gcloud config get-value project) --format='value(projectNumber)')"
+        ```
+
+    * Create an Artifact Registry repo: 
+
+        ```bash
+        gcloud artifacts repositories create repo \
+            --repository-format=docker --location=us-central1
         ```
 
     * Create service account `token-creator` with `Service Account Token Creator` and `Cloud Run Invoker` roles.
@@ -130,7 +137,7 @@ Invoke will handle establishing local virtual environments, etc. Task definition
             --role="roles/iam.serviceAccountTokenCreator"
         ```
     
-    Cloud Build also requires permission to deploy Cloud Run services: 
+    * Cloud Build also requires permission to deploy Cloud Run services and administer artifacts: 
 
         ```bash
         gcloud projects add-iam-policy-binding $PROJECT_ID \
@@ -139,6 +146,9 @@ Invoke will handle establishing local virtual environments, etc. Task definition
         gcloud projects add-iam-policy-binding $PROJECT_ID \
             --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
             --role="roles/iam.serviceAccountUser"
+        gcloud projects add-iam-policy-binding $PROJECT_ID \
+            --member="serviceAccount:$PROJECT_NUMBER@cloudbuild.gserviceaccount.com" \
+            --role="roles/artifactregistry.repoAdmin"
         ```
 
 ## Maintenance & Support
