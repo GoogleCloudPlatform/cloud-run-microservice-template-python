@@ -11,22 +11,22 @@
 
 steps:
   - id: "Install Invoke and Pip"
-    name: ${_PYTHON_VERSION}
-    entrypoint: pip
-    args: ["install", "invoke", "-U", "pip", "--user"]
+    name: $_PYTHON_VERSION
+    entrypoint: python
+    args: ["-m", "pip", "install", "invoke", "-U", "pip", "--user"]
 
   - id: "Setup virtualenv"
-    name: "${_PYTHON_VERSION}"
+    name: $_PYTHON_VERSION
     entrypoint: python
     args: ["-m", "invoke", "setup-virtualenv"]
 
   - id: "Lint"
-    name: "${_PYTHON_VERSION}"
+    name: $_PYTHON_VERSION
     entrypoint: python
     args: ["-m", "invoke", "lint"]
 
   - id: "Run Unit Tests"
-    name: "${_PYTHON_VERSION}"
+    name: $_PYTHON_VERSION
     entrypoint: python
     args: ["-m", "invoke", "test"]
 
@@ -87,7 +87,7 @@ steps:
         python -m invoke system-test
 
   # Clean up system test resources
-  
+
   - id: "Delete image and service"
     name: "gcr.io/cloud-builders/gcloud"
     entrypoint: "/bin/bash"
