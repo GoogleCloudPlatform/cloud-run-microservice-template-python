@@ -12,10 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import request as flask_request
 import google.auth
-from google.auth.transport.requests import Request
-from google.oauth2 import id_token
 import requests
 
 METADATA_URI = "http://metadata.google.internal/computeMetadata/v1/"
