@@ -1,0 +1,7 @@
+Flask==2.0.1
+gunicorn==20.1.0
+
+requests==2.25.1
+structlog==21.1.0
+
+google-auth==1.28.0
