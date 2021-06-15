@@ -111,13 +111,6 @@ Invoke will handle establishing local virtual environments, etc. Task definition
         export PROJECT_NUMBER="$(gcloud projects describe $(gcloud config get-value project) --format='value(projectNumber)')"
         ```
 
-    * Create an Artifact Registry repo: 
-
-        ```bash
-        gcloud artifacts repositories create repo \
-            --repository-format=docker --location=us-central1
-        ```
-
     * Create service account `token-creator` with `Service Account Token Creator` and `Cloud Run Invoker` roles.
         ```bash
         gcloud iam service-accounts create token-creator
