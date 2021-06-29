@@ -13,5 +13,8 @@
       "packagePatterns": ["pytest"],
       "updateTypes": ["minor", "major"]
     }
-  ]
+  ],
+  "constraints": {
+    "python": "3.8.6"
+  }
 }
