@@ -16,5 +16,6 @@
   ],
   "constraints": {
     "python": "3.8.6"
-  }
+  },
+  "schedule": ["before 8am on the first day of the month"]
 }
