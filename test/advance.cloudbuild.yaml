@@ -37,7 +37,7 @@ steps:
     entrypoint: pack
     args:
       - build
-      - "$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA" # Tag docker image with git commit SHA
+      - "$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA" # Tag docker image with git commit SHA
       - "--builder=gcr.io/buildpacks/builder:v1"
       - "--path=."
 
@@ -45,7 +45,7 @@ steps:
     name: "gcr.io/cloud-builders/docker:latest"
     args:
       - push
-      - "$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
+      - "$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA"
 
   - id: "Deploy to Cloud Run"
     name: "gcr.io/cloud-builders/gcloud:latest"
@@ -57,7 +57,7 @@ steps:
       - |
         cat /dev/urandom | LC_CTYPE=C tr -dc 'a-z0-9' | head -c 15 > _short_id 
         gcloud run deploy ${_SERVICE_NAME}-$(cat _short_id) \
-          --image $_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA \
+          --image $_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA \
           --region ${_DEPLOY_REGION} \
           --platform ${_PLATFORM} \
           --no-allow-unauthenticated
@@ -94,7 +94,7 @@ steps:
     args:
       - "-c"
       - |
-        gcloud container images delete $_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA --quiet
+        gcloud container images delete $_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$SHORT_SHA --quiet
         gcloud run services delete ${_SERVICE_NAME}-$(cat _short_id) \
           --region ${_DEPLOY_REGION} --platform ${_PLATFORM} --quiet
 
