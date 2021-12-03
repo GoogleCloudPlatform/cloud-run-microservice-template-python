@@ -2,6 +2,6 @@ Flask==2.0.2
 gunicorn==20.1.0
 
 requests==2.26.0
-structlog==21.2.0
+structlog==21.4.0
 
 google-auth==2.3.2
