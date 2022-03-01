@@ -1,7 +1,7 @@
 pip==22.0.2
 invoke==1.6.0
 
-pytest==6.2.5
+pytest==7.0.1
 black==22.1.0
 flake8==4.0.1
 flake8-annotations==2.7.0
