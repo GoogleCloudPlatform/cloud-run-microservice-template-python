@@ -2,7 +2,7 @@ pip==22.0.3
 invoke==1.6.0
 
 pytest==7.0.1
-black==22.1.0
+black==22.3.0
 flake8==4.0.1
 flake8-annotations==2.7.0
 flake8-import-order==0.18.1
