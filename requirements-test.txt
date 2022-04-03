@@ -1,5 +1,5 @@
 pip==22.0.4
-invoke==1.6.0
+invoke==1.7.0
 
 pytest==7.0.1
 black==22.3.0
