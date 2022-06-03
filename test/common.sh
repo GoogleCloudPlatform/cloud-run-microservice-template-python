@@ -50,7 +50,7 @@ get_url() {
 get_idtoken() {
     curl -X POST -H "content-type: application/json" \
     -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-    -d "{\"audience\": \"$(get_url)\"}" \
+    -d "{\"audience\": \"$(cat _service_url)\"}" \
     "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/token-creator@${PROJECT_ID}.iam.gserviceaccount.com:generateIdToken" | \
     python3 -c "import sys, json; print(json.load(sys.stdin)['token'])"
 } 
