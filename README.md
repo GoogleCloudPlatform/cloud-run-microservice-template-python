@@ -96,7 +96,7 @@ Invoke will handle establishing local virtual environments, etc. Task definition
     ```bash
     gcloud builds submit \
         --config test/advance.cloudbuild.yaml \
-        --substitutions 'COMMIT_SHA=manual'
+        --substitutions 'SHORT_SHA=manual'
     ```
     The Cloud Build configuration file will build and deploy the containerized service
     to Cloud Run, run tests managed by pytest, then clean up testing resources. This configuration restricts public
@@ -109,13 +109,6 @@ Invoke will handle establishing local virtual environments, etc. Task definition
         ```bash
         export PROJECT_ID="$(gcloud config get-value project)"
         export PROJECT_NUMBER="$(gcloud projects describe $(gcloud config get-value project) --format='value(projectNumber)')"
-        ```
-
-    * Create an Artifact Registry repo: 
-
-        ```bash
-        gcloud artifacts repositories create repo \
-            --repository-format=docker --location=us-central1
         ```
 
     * Create service account `token-creator` with `Service Account Token Creator` and `Cloud Run Invoker` roles.
