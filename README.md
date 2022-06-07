@@ -67,6 +67,24 @@ Invoke will handle establishing local virtual environments, etc. Task definition
     ```bash
     export GOOGLE_CLOUD_PROJECT=<GCP_PROJECT_ID>
     ```
+
+1. Enable the Artifact Registry API:
+    ```bash
+    gcloud services enable artifactregistry.googleapis.com
+    ```
+
+1. Create an Artifact Registry repo:
+    ```bash
+    export REPOSITORY="samples"
+    export REGION=us-central1
+    gcloud artifacts repositories create $REPOSITORY --location $REGION --repository-format "docker"
+    ```
+  
+1. Use the gcloud credential helper to authorize Docker to push to your Artifact Registry:
+    ```bash
+    gcloud auth configure-docker
+    ```
+
 2. Build the container using a buildpack:
     ```bash
     invoke build
@@ -101,16 +119,24 @@ Invoke will handle establishing local virtual environments, etc. Task definition
     The Cloud Build configuration file will build and deploy the containerized service
     to Cloud Run, run tests managed by pytest, then clean up testing resources. This configuration restricts public
     access to the test service. Therefore, service accounts need to have the permission to issue ID tokens for request authorization:
-    * Enable Cloud Run, Cloud Build and IAM APIs:
+    * Enable Cloud Run, Cloud Build, Artifact Registry, and IAM APIs:
         ```bash
         gcloud services enable run.googleapis.com cloudbuild.googleapis.com iamcredentials.googleapis.com artifactregistry.googleapis.com
         ```
+        
     * Set environment variables.
         ```bash
         export PROJECT_ID="$(gcloud config get-value project)"
         export PROJECT_NUMBER="$(gcloud projects describe $(gcloud config get-value project) --format='value(projectNumber)')"
         ```
 
+    * Create an Artifact Registry repo (or use another already created repo):
+        ```bash
+        export REPOSITORY="samples"
+        export REGION=us-central1
+        gcloud artifacts repositories create $REPOSITORY --location $REGION --repository-format "docker"
+        ```
+  
     * Create service account `token-creator` with `Service Account Token Creator` and `Cloud Run Invoker` roles.
         ```bash
         gcloud iam service-accounts create token-creator
