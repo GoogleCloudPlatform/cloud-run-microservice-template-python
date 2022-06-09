@@ -10,8 +10,8 @@
   },
   "packageRules": [
     {
-      "packagePatterns": ["pytest"],
-      "updateTypes": ["minor", "major"]
+      "matchPackageNames": ["pytest"],
+      "matchUpdateTypes": ["minor", "major"]
     }
   ],
   "constraints": {
