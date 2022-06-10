@@ -114,7 +114,7 @@ Invoke will handle establishing local virtual environments, etc. Task definition
     ```bash
     gcloud builds submit \
         --config test/advance.cloudbuild.yaml \
-        --substitutions 'SHORT_SHA=manual'
+        --substitutions 'COMMIT_SHA=manual,REPO_NAME=manual'
     ```
     The Cloud Build configuration file will build and deploy the containerized service
     to Cloud Run, run tests managed by pytest, then clean up testing resources. This configuration restricts public
