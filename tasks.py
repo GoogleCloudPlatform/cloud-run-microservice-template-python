@@ -27,6 +27,7 @@ from invoke import task
 
 venv = "source ./venv/bin/activate"
 GOOGLE_CLOUD_PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
+REGION = os.environ.get("REGION", "us-central1")
 
 
 @task
@@ -119,7 +120,7 @@ def build(c):  # noqa: ANN001, ANN201
     """Build the service into a container image"""
     c.run(
         f"gcloud builds submit --pack "
-        f"image=us-central1-docker.pkg.dev/{GOOGLE_CLOUD_PROJECT}/samples/microservice-template:manual"
+        f"image={REGION}-docker.pkg.dev/{GOOGLE_CLOUD_PROJECT}/samples/microservice-template:manual"
     )
 
 
@@ -128,8 +129,8 @@ def deploy(c):  # noqa: ANN001, ANN201
     """Deploy the container into Cloud Run (fully managed)"""
     c.run(
         "gcloud run deploy microservice-template "
-        f"--image us-central1-docker.pkg.dev/{GOOGLE_CLOUD_PROJECT}/samples/microservice-template:manual "
-        "--platform managed --region us-central1"
+        f"--image {REGION}-docker.pkg.dev/{GOOGLE_CLOUD_PROJECT}/samples/microservice-template:manual "
+        f"--platform managed --region {REGION}"
     )
 
 
