@@ -90,7 +90,7 @@ steps:
     args:
       - "-c"
       - |
-        gcloud artifact docker images delete $_GCR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA --quiet
+        gcloud artifacts docker images delete $_GCR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA --quiet
         gcloud run services delete ${_SERVICE_NAME}-$BUILD_ID \
           --region ${_DEPLOY_REGION} --quiet
 
