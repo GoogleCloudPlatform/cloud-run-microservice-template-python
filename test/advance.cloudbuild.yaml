@@ -32,7 +32,7 @@ steps:
 
   # Setup resources for system tests
 
-  - id: "Build Container Image"
+  - id: "Build and Push Container Image"
     name: "gcr.io/k8s-skaffold/pack"
     entrypoint: pack
     args:
@@ -40,12 +40,8 @@ steps:
       - "$_GCR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA" # Tag docker image with git commit SHA
       - "--builder=gcr.io/buildpacks/builder:v1"
       - "--path=."
-
-  - id: "Push Container Image"
-    name: "gcr.io/cloud-builders/docker:latest"
-    args:
-      - push
-      - "$_GCR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
+      - "-v"
+      - "--publish"
 
   - id: "Deploy to Cloud Run"
     name: "gcr.io/cloud-builders/gcloud:latest"
