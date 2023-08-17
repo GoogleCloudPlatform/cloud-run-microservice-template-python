@@ -31,8 +31,7 @@ steps:
     args: ["-m", "invoke", "test"]
 
   # Setup resources for system tests
-
-  - id: "Build and Push Container Image"
+  - id: "Build Container Image"
     name: "gcr.io/k8s-skaffold/pack"
     entrypoint: pack
     args:
@@ -40,8 +39,21 @@ steps:
       - "$_GCR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA" # Tag docker image with git commit SHA
       - "--builder=gcr.io/buildpacks/builder:latest"
       - "--path=."
-      - "-v"
-      - "--publish"
+
+  - id: "Push Container Image"
+    name: "gcr.io/cloud-builders/docker:latest"
+    entrypoint: /bin/bash
+    timeout: 60s
+    args:
+      - "-c"
+      - |
+        retry=true
+        while $retry; do
+          docker push "$_GCR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
+          if [ $? -eq 0 ]; then
+            retry=false
+          fi
+        done
 
   - id: "Deploy to Cloud Run"
     name: "gcr.io/cloud-builders/gcloud:latest"
