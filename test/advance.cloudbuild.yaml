@@ -47,12 +47,8 @@ steps:
     args:
       - "-c"
       - |
-        retry=true
-        while $retry; do
-          docker push "$_GCR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
-          if [ $? -eq 0 ]; then
-            retry=false
-          fi
+        while ! docker push "$_GCR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"; do
+          sleep 2
         done
 
   - id: "Deploy to Cloud Run"
