@@ -47,7 +47,7 @@ steps:
     args:
       - "-c"
       - |
-        while ! docker push "$_GCR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"
+        while ! docker push "$_GCR_HOSTNAME/$PROJECT_ID/$_REPOSITORY/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA"; do
           sleep 2
         done
 
