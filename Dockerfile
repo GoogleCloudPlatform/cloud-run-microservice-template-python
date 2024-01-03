@@ -19,6 +19,18 @@ ENV PYTHONUNBUFFERED 1
 # Create and change to the app directory.
 WORKDIR /usr/src/app
 
+# Install system dependencies
+# First, update the package list and then install PostgreSQL client and other essential build tools
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+       libpq-dev \
+       build-essential \
+       libssl-dev \
+       libffi-dev \
+       python3-dev \
+    # Clean up the cache to reduce the size of the image
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy application dependency manifests to the container image.
 # Copying this separately prevents re-running pip install on every code change.
 COPY requirements.txt ./

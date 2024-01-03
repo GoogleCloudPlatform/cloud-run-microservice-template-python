@@ -16,12 +16,13 @@ import signal
 import sys
 from types import FrameType
 
-from flask import Flask
+from flask import Flask, request
 
 from utils.logging import logger
 
-app = Flask(__name__)
+from models.data_processing_models import create_mvg
 
+app = Flask(__name__)
 
 @app.route("/")
 def hello() -> str:
@@ -32,6 +33,12 @@ def hello() -> str:
     logger.info("Child logger with trace Id.")
 
     return "Hello, World!"
+
+@app.route("/create-mavg", methods=['POST'])
+def create_mavg_for_day():
+    data = request.json
+    create_mvg(data)
+    return "Data processed and stored in PROC_DATA table"
 
 
 def shutdown_handler(signal_int: int, frame: FrameType) -> None:
