@@ -15,6 +15,7 @@
 import signal
 import sys
 from types import FrameType
+from multiprocessing import Process
 
 from flask import Flask, request
 
@@ -22,7 +23,19 @@ from utils.logging import logger
 
 from models.data_processing_models import create_mvg
 
+from prefect import Flow, task, flow
+
 app = Flask(__name__)
+
+@task
+def create_mavg_for_day_task(data):
+    create_mvg(data)
+    logger.info("Data processed and stored in PROC_DATA table")
+
+def create_mavg_for_day_flow(data):
+    with Flow("create_mavg_for_day_flow") as flow:
+        create_mavg_for_day_task(data)
+    return flow
 
 @app.route("/")
 def hello() -> str:
@@ -34,11 +47,19 @@ def hello() -> str:
 
     return "Hello, World!"
 
+
 @app.route("/create-mavg", methods=['POST'])
-def create_mavg_for_day():
+def create_mavg_for_day_endpoint():
     data = request.json
-    create_mvg(data)
-    return "Data processed and stored in PROC_DATA table"
+    # Extract data from the request
+    data = request.get_json()
+    # Trigger the flow and pass the data to it
+    flow = create_mavg_for_day_flow(data)
+    flow_state = flow.run(parameters={"data": data})
+    
+    return "Data processing task initiated", 202
+
+    
 
 
 def shutdown_handler(signal_int: int, frame: FrameType) -> None:
@@ -57,6 +78,8 @@ if __name__ == "__main__":
 
     # handles Ctrl-C termination
     signal.signal(signal.SIGINT, shutdown_handler)
+
+    # create_mavg_for_day()
 
     app.run(host="localhost", port=8080, debug=True)
 else:
