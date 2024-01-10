@@ -1,17 +1,3 @@
-# Copyright 2021 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import signal
 import sys
 from types import FrameType
@@ -20,9 +6,7 @@ from multiprocessing import Process
 from flask import Flask, request
 
 from utils.logging import logger
-
 from models.data_processing_models import create_mvg
-
 from prefect import Flow, task, flow
 
 app = Flask(__name__)
@@ -32,35 +16,18 @@ def create_mavg_for_day_task(data):
     create_mvg(data)
     logger.info("Data processed and stored in PROC_DATA table")
 
+@flow
 def create_mavg_for_day_flow(data):
-    with Flow("create_mavg_for_day_flow") as flow:
-        create_mavg_for_day_task(data)
-    return flow
-
-@app.route("/")
-def hello() -> str:
-    # Use basic logging with custom fields
-    logger.info(logField="custom-entry", arbitraryField="custom-entry")
-
-    # https://cloud.google.com/run/docs/logging#correlate-logs
-    logger.info("Child logger with trace Id.")
-
-    return "Hello, World!"
-
+    create_mavg_for_day_task(data)
 
 @app.route("/create-mavg", methods=['POST'])
 def create_mavg_for_day_endpoint():
     data = request.json
-    # Extract data from the request
     data = request.get_json()
-    # Trigger the flow and pass the data to it
-    flow = create_mavg_for_day_flow(data)
-    flow_state = flow.run(parameters={"data": data})
+    create_mavg_for_day_flow(data)
+    # flow_state = flow.run(parameters={"data": data})
     
     return "Data processing task initiated", 202
-
-    
-
 
 def shutdown_handler(signal_int: int, frame: FrameType) -> None:
     logger.info(f"Caught Signal {signal.strsignal(signal_int)}")
