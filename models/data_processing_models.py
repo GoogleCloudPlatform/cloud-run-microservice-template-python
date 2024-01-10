@@ -47,7 +47,7 @@ db_port = "5432"
 db_user = "postgres"
 db_password = "Amygda123"
 
-def create_mvg(data):
+def get_data_from_db_func(data):
     equipment_number = data['equipment_number']
     date = data['date']
     mav_period = data['mavg_period']
@@ -79,24 +79,33 @@ def create_mvg(data):
     # Remove the columns from the DataFrame if they exist
 
     df_sample_cleaned = df.drop(columns=[col for col in columns_to_remove if col in df.columns])
+    return df_sample_cleaned
 
-    # Resample and create mvag columns for numeric columns
-
-    numeric_cols = df_sample_cleaned.select_dtypes(include=[np.number]).columns
+def rsmp_and_create_mavg_for_the_data_func(df, mav_period):
+    numeric_cols = df.select_dtypes(include=[np.number]).columns
 
     # Resample only the numeric columns and calculate the mean and mavg
-    df_resampled_numeric = df_sample_cleaned[numeric_cols].resample('1T').mean()
+    df_resampled_numeric = df[numeric_cols].resample('1T').mean()
 
     for col in numeric_cols:
         df_resampled_numeric[f'{col}_mavg'] = df_resampled_numeric[col].rolling(window=f"{mav_period}T").mean()
 
-    non_numeric_cols = df_sample_cleaned.select_dtypes(exclude=[np.number]).columns
-    df_resampled = df_sample_cleaned[non_numeric_cols].join(df_resampled_numeric, how='right')
+    non_numeric_cols = df.select_dtypes(exclude=[np.number]).columns
+    df_resampled = df[non_numeric_cols].join(df_resampled_numeric, how='right')
 
     df_resampled = df_resampled.rename(columns={col: f"{col}_rsmpl" for col in numeric_cols})
 
     df_resampled.reset_index(inplace=True)
-    df_resampled.to_sql("PROC_DATA", db_engine, if_exists='append', index=False)
-    del df
+    
+    return df_resampled
+
+def store_proc_data_in_db_func(df, target_table_name):
+    # Database engine
+
+    db_name = "ATL"
+    db_engine = create_engine(f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}', echo=False)
+
+    # 
+    df.to_sql(target_table_name, db_engine, if_exists='append', index=False)
 
     return 0
