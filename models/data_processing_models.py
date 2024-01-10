@@ -81,7 +81,7 @@ def get_data_from_db_func(data):
     df_sample_cleaned = df.drop(columns=[col for col in columns_to_remove if col in df.columns])
     return df_sample_cleaned
 
-def rsmp_and_create_mavg_for_the_data_func(df, mav_period):
+def create_rsmp_and_mavg_for_the_data_func(df, mav_period):
     numeric_cols = df.select_dtypes(include=[np.number]).columns
 
     # Resample only the numeric columns and calculate the mean and mavg
