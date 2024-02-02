@@ -21,7 +21,7 @@ from utils import metadata
 
 
 def field_name_modifier(
-    logger: structlog._loggers.PrintLogger, log_method: str, event_dict: Dict
+    logger: structlog.PrintLogger, log_method: str, event_dict: Dict
 ) -> Dict:
     """Changes the keys for some of the fields,
     to match Cloud Logging's expectations
@@ -40,7 +40,7 @@ def field_name_modifier(
 
 
 def trace_modifier(
-    logger: structlog._loggers.PrintLogger, log_method: str, event_dict: Dict
+    logger: structlog.PrintLogger, log_method: str, event_dict: Dict
 ) -> Dict:
     """Adds Tracing correlation
     https://cloud.google.com/run/docs/logging#correlate-logs
