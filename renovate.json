@@ -1,21 +1,30 @@
 {
   "extends": [
-    "config:base"
+    "config:recommended"
   ],
   "prConcurrentLimit": 0,
   "rebaseWhen": "never",
-  "masterIssue": true,
+  "dependencyDashboard": true,
   "pip_requirements": {
-    "fileMatch": ["requirements-test.txt"]
+    "fileMatch": [
+      "requirements-test.txt"
+    ]
   },
   "packageRules": [
     {
-      "matchPackageNames": ["pytest"],
-      "matchUpdateTypes": ["minor", "major"]
+      "matchPackageNames": [
+        "pytest"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "major"
+      ]
     }
   ],
   "constraints": {
     "python": "3.8.6"
   },
-  "schedule": ["before 8am on the first day of the month"]
+  "schedule": [
+    "before 8am on the first day of the month"
+  ]
 }
