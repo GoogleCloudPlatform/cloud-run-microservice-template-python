@@ -106,5 +106,5 @@ substitutions:
   _GCR_HOSTNAME: us-central1-docker.pkg.dev
   _SERVICE_NAME: microservice-template
   _DEPLOY_REGION: us-central1
-  _PYTHON_VERSION: python:3.8.6-slim # matches buildpack latest
+  _PYTHON_VERSION: python:3.12-slim # matches .python-version
   _REPOSITORY: samples
