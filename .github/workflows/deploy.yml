@@ -31,6 +31,7 @@ jobs:
         with:
           token_format: 'access_token'
           workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
+          project_id: '${{ env.PROJECT_ID }}'
 
       # gcloudコマンドのセットアップ (ここを追加)
       - name: Set up Cloud SDK
