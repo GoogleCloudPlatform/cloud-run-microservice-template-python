@@ -6,10 +6,10 @@ on:
       - main
 
 env:
-  PROJECT_ID: ex-ai-training-program  # 自身のプロジェクトIDに書き換え
+  PROJECT_ID: ex-ai-training-program　 # 自身のプロジェクトIDに書き換え
   GAR_LOCATION: asia-northeast1
-  REPOSITORY: nakayama-20260213  # 自身のarのレジストリ
-  SERVICE: nakayama-20260213 # 自身のcloud runのサービス名
+  REPOSITORY: nakayama-20260213   #自身のarのレジストリ
+  SERVICE: nakayama-20260213  #自身のcloud runのサービス名
   REGION: asia-northeast1
 
 jobs:
@@ -29,15 +29,15 @@ jobs:
         id: auth
         uses: 'google-github-actions/auth@v2'
         with:
-          token_format: 'access_token'
-          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
           project_id: '${{ env.PROJECT_ID }}'
+          workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
 
       # gcloudコマンドのセットアップ (ここを追加)
       - name: Set up Cloud SDK
         uses: 'google-github-actions/setup-gcloud@v2'
         with:
           version: '>= 363.0.0'
+          project_id: '${{ env.PROJECT_ID }}'
 
       # Cloud Build にビルドとプッシュを依頼 (ここを変更)
       # ローカル(GitHub Actions)のソースをGCPにアップロードし、Cloud Build上でビルド＆プッシュします
@@ -46,6 +46,7 @@ jobs:
           gcloud builds submit \
             --quiet \
             --tag "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}" \
+            --project '${{ env.PROJECT_ID }}\
             .
 
       # Cloud Runへのデプロイ (ここは変更なし)
