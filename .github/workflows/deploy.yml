@@ -6,9 +6,9 @@ on:
       - main
 
 env:
-  PROJECT_ID: ex-ai-training-program　 # 自身のプロジェクトIDに書き換え
+  PROJECT_ID: ex-ai-training-program  #自身のプロジェクトIDに書き換え
   GAR_LOCATION: asia-northeast1
-  REPOSITORY: nakayama-20260213   #自身のarのレジストリ
+  REPOSITORY: nakayama-20260213  #自身のarのレジストリ
   SERVICE: nakayama-20260213  #自身のcloud runのサービス名
   REGION: asia-northeast1
 
