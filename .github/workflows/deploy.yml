@@ -37,6 +37,7 @@ jobs:
         uses: 'google-github-actions/setup-gcloud@v2'
         with:
           version: '>= 363.0.0'
+          project_id: '${{ env.PROJECT_ID }}
 
       # Cloud Build にビルドとプッシュを依頼 (ここを変更)
       # ローカル(GitHub Actions)のソースをGCPにアップロードし、Cloud Build上でビルド＆プッシュします
@@ -45,6 +46,7 @@ jobs:
           gcloud builds submit \
             --quiet \
             --tag "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.SERVICE }}:${{ github.sha }}" \
+  --project_id: '${{ env.PROJECT_ID }}\
             .
 
       # Cloud Runへのデプロイ (ここは変更なし)
