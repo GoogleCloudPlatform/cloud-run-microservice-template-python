@@ -1,7 +1,7 @@
-pip==26.0
+pip==26.0.1
 invoke==2.0.0
-pytest==9.0.1
+pytest==9.0.2
 black==26.3.0
 flake8==7.3.0
-flake8-annotations==3.0.0
+flake8-annotations==3.2.0
 flake8-import-order==0.19.2
