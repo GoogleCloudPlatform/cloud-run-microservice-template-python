@@ -1,5 +1,5 @@
 pip==26.0.1
-invoke==2.2.1
+invoke==3.0.3
 pytest==9.0.2
 black==26.3.0
 flake8==7.3.0
